@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         Title="Drag2Note Floating Window" Height="300" Width="300"
         WindowStyle="None" AllowsTransparency="True" Topmost="True"
-        Background="{StaticResource BeigeBrush}">
-    <Border CornerRadius="20" BorderBrush="Gray" BorderThickness="1">
+        Background="Transparent">
+    <Border CornerRadius="20" BorderBrush="Gray" BorderThickness="1" Background="{StaticResource BeigeBrush}">
         <TextBlock Text="Drop Here" 
                    HorizontalAlignment="Center" 
                    VerticalAlignment="Center"
