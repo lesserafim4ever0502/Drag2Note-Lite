@@ -3,15 +3,53 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:vm="clr-namespace:Drag2Note.ViewModels"
         mc:Ignorable="d"
         Title="Drag2Note Floating Window" Height="300" Width="300"
         WindowStyle="None" AllowsTransparency="True" Topmost="True"
-        Background="Transparent">
+        Background="Transparent" AllowDrop="True">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
     <Border CornerRadius="20" BorderBrush="Gray" BorderThickness="1" Background="{StaticResource BeigeBrush}">
-        <TextBlock Text="Drop Here" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"
-                   FontSize="24"/>
+        <Grid>
+            <!-- Status Text (Idle, Hover, Processing) -->
+            <TextBlock Text="{Binding StatusText}" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       FontSize="24"
+                       TextWrapping="Wrap" TextAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentState}" Value="Decision">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <!-- Decision Buttons -->
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CurrentState}" Value="Decision">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+
+                <Button Content="Note" Command="{Binding NoteCommand}" Width="100" Height="40" Margin="5"/>
+                <Button Content="To-do" Command="{Binding TodoCommand}" Width="100" Height="40" Margin="5"/>
+                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="30" Margin="5" Background="Transparent" BorderThickness="0"/>
+            </StackPanel>
+        </Grid>
     </Border>
 </Window>
