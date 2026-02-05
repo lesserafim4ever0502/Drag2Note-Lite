@@ -1,0 +1,350 @@
+<Window x:Class="Drag2Note.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Drag2Note.Resources"
+        xmlns:vm="clr-namespace:Drag2Note.ViewModels"
+        mc:Ignorable="d" 
+        Title="Settings" Height="500" Width="750"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <local:EqualityToBooleanConverter x:Key="EqualityToBooleanConverter"/>
+        
+        <Style TargetType="Control">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+
+        <Style x:Key="NavRadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid>
+                            <Border x:Name="Bg" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border x:Name="Indicator" Width="4" Height="20" Background="{DynamicResource PrimaryBrush}" CornerRadius="2" HorizontalAlignment="Left" Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource MenuItemHover}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Indicator" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Bg" Property="Background" Value="{DynamicResource SelectionBackground}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="HotkeyButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="MinWidth" Value="110"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" CornerRadius="8" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ToggleSwitchStyle" TargetType="ToggleButton">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <Border x:Name="Bg" CornerRadius="12" Background="{DynamicResource BorderBrush}"/>
+                            <Ellipse x:Name="Dot" Fill="White" Width="18" Height="18" HorizontalAlignment="Left" Margin="3,0">
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform X="0"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#38A169"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Dot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="20" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Dot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.15"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Border CornerRadius="15" Background="{DynamicResource WindowBackground}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.1"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{DynamicResource SearchBackground}" CornerRadius="15,0,0,15" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+                <Grid Margin="20,30">
+                    <StackPanel>
+                        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Margin="10,0,0,30"/>
+                        
+                        <RadioButton Style="{StaticResource NavRadioButtonStyle}" 
+                                     Command="{Binding SetPageCommand}" CommandParameter="General"
+                                     IsChecked="{Binding ActivePage, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=General}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚙️" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="General" FontSize="15"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource NavRadioButtonStyle}" 
+                                     Command="{Binding SetPageCommand}" CommandParameter="Main"
+                                     IsChecked="{Binding ActivePage, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=Main}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🏠" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Main" FontSize="15"/>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource NavRadioButtonStyle}" 
+                                     Command="{Binding SetPageCommand}" CommandParameter="Floating"
+                                     IsChecked="{Binding ActivePage, Converter={StaticResource EqualityToBooleanConverter}, ConverterParameter=Floating}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="✨" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Floating" FontSize="15"/>
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                        <TextBlock Text="Drag2Note v1.0.0" FontSize="11" Foreground="{DynamicResource TextSecondary}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1" Margin="35,40">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock x:Name="PageText" Text="{Binding ActivePage}" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,25"/>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ContentControl Content="{Binding}">
+                        <ContentControl.Resources>
+                            <DataTemplate x:Key="GeneralPage">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Launch at Startup" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" IsChecked="{Binding Settings.LaunchAtStartup}"/>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Dark Mode" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" IsChecked="{Binding Settings.DarkMode}"/>
+                                    </Grid>
+
+                                    <!-- Credits Section -->
+                                    <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}" Padding="0,20,0,0" Margin="0,20,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Credits" FontSize="14" FontWeight="SemiBold" 
+                                                       Foreground="{DynamicResource TextPrimary}" Margin="0,0,0,10"/>
+                                            
+                                            <!-- Icons8 Attribution -->
+                                            <TextBlock FontSize="12" Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,6" TextWrapping="Wrap">
+                                                <Run Text="Some icons by "/>
+                                                <Hyperlink NavigateUri="https://igoutu.cn/" RequestNavigate="Hyperlink_RequestNavigate">
+                                                    <Run Text="Icons8"/>
+                                                </Hyperlink>
+                                            </TextBlock>
+                                            
+                                            <!-- MIT License -->
+                                            <TextBlock FontSize="12" Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap">
+                                                <Run Text="App icon designed using components from [iconfont]"/>
+                                                <Run Text=" ("/>
+                                                <Hyperlink NavigateUri="https://opensource.org/licenses/MIT" RequestNavigate="Hyperlink_RequestNavigate">
+                                                    <Run Text="MIT License"/>
+                                                </Hyperlink>
+                                                <Run Text=")"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+
+                            <DataTemplate x:Key="MainPage">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Global Hotkey" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" Style="{StaticResource HotkeyButtonStyle}"
+                                                Command="{Binding StartRecordMainHotkeyCommand}">
+                                            <TextBlock x:Name="KeyText" Text="{Binding Settings.GlobalMainHotkey}" 
+                                                     Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        </Button>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Auto-hide at Edge" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" IsChecked="{Binding Settings.AutoHideAtEdge}"/>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Move Completed to Bottom" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" IsChecked="{Binding Settings.MoveCompletedToBottom}"/>
+                                    </Grid>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsRecordingMainHotkey}" Value="True">
+                                        <Setter TargetName="KeyText" Property="Text" Value="Recording..."/>
+                                        <Setter TargetName="KeyText" Property="Foreground" Value="#3182CE"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+
+                            <DataTemplate x:Key="FloatingPage">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Enable Drop Zone" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <ToggleButton Grid.Column="1" Style="{StaticResource ToggleSwitchStyle}" IsChecked="{Binding Settings.EnableDropZone}"/>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Global Hotkey" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <Button Grid.Column="1" Style="{StaticResource HotkeyButtonStyle}"
+                                                Command="{Binding StartRecordFloatHotkeyCommand}">
+                                            <TextBlock x:Name="KeyTextFloat" Text="{Binding Settings.GlobalFloatHotkey}" 
+                                                     Foreground="{DynamicResource TextPrimary}" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        </Button>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,25">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Opacity" FontSize="16" Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" VerticalAlignment="Center"/>
+                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <Slider Width="130" Minimum="0.2" Maximum="1.0" Value="{Binding Settings.FloatingOpacity, Mode=TwoWay}" 
+                                                    VerticalAlignment="Center" Margin="0,0,12,0"
+                                                    FocusVisualStyle="{x:Null}"/>
+                                            <TextBlock Text="{Binding Settings.FloatingOpacity, StringFormat=P0}" Foreground="{DynamicResource TextSecondary}" FontWeight="Bold" Width="45" TextAlignment="Right"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsRecordingFloatHotkey}" Value="True">
+                                        <Setter TargetName="KeyTextFloat" Property="Text" Value="Recording..."/>
+                                        <Setter TargetName="KeyTextFloat" Property="Foreground" Value="#3182CE"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </ContentControl.Resources>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ActivePage}" Value="General">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource GeneralPage}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ActivePage}" Value="Main">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource MainPage}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ActivePage}" Value="Floating">
+                                        <Setter Property="ContentTemplate" Value="{StaticResource FloatingPage}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                </ScrollViewer>
+
+                <Button Grid.Row="2" Content="Close" Click="CloseButton_Click" 
+                        HorizontalAlignment="Right" Padding="25,8"
+                        Background="{DynamicResource HeaderBackground}" Foreground="{DynamicResource TextSecondary}" BorderThickness="0"
+                        Cursor="Hand" FocusVisualStyle="{x:Null}">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+            
+
+        </Grid>
+        </Border>
+    </Grid>
+</Window>

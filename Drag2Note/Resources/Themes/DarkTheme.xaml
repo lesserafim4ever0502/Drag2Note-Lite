@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="WindowBackground" Color="#1A202C"/>
+    <SolidColorBrush x:Key="HeaderBackground" Color="#2D3748"/>
+    <SolidColorBrush x:Key="SearchBackground" Color="#2D3748"/>
+    <SolidColorBrush x:Key="TextPrimary" Color="#E2E8F0"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#A0AEC0"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#4A5568"/>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#63B3ED"/>
+    
+    <SolidColorBrush x:Key="CardNoteBackground" Color="#44337A"/> <!-- Deep Purple -->
+    <SolidColorBrush x:Key="CardNoteBorder" Color="#4A5568"/>
+    <SolidColorBrush x:Key="CardTodoBackground" Color="#1C4532"/> <!-- Darker Greenish -->
+    <SolidColorBrush x:Key="CardTodoBorder" Color="#276749"/>
+    <SolidColorBrush x:Key="CardCompletedBackground" Color="#171923"/>
+    
+    <SolidColorBrush x:Key="TabBackground" Color="#2D3748"/>
+    <SolidColorBrush x:Key="TabActiveBackground" Color="#4A5568"/>
+    <SolidColorBrush x:Key="TabActiveForeground" Color="#FFFFFF"/>
+    
+    <SolidColorBrush x:Key="MenuItemHover" Color="#2D3748"/>
+    <SolidColorBrush x:Key="SelectionBackground" Color="#2A4365"/>
+    <SolidColorBrush x:Key="TagBackground" Color="#2A4365"/>
+    <SolidColorBrush x:Key="TagForeground" Color="#90CDF4"/>
+</ResourceDictionary>

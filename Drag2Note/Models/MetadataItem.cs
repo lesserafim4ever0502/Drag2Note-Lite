@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Drag2Note.Models
 {
@@ -25,7 +26,12 @@ namespace Drag2Note.Models
         public TodoStatus Status { get; set; } = TodoStatus.Pending;
         public int OrderIndex { get; set; }
         public long CreatedAt { get; set; } = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        public List<string> Tags { get; set; } = new List<string>();
+
+        // Helper for UI
+        public DateTime CreatedAtDateTime => DateTimeOffset.FromUnixTimeMilliseconds(CreatedAt).LocalDateTime;
+        public string CreatedAtString => CreatedAtDateTime.ToString("yyyy-MM-dd HH:mm");
+
+        public ObservableCollection<string> Tags { get; set; } = new ObservableCollection<string>();
     }
 
     public class AppData

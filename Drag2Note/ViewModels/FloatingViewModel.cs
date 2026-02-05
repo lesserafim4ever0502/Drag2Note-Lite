@@ -9,6 +9,7 @@ using Drag2Note.Services.Data;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using Drag2Note.Services;
 
 namespace Drag2Note.ViewModels
 {
@@ -28,17 +29,27 @@ namespace Drag2Note.ViewModels
         [ObservableProperty]
         private string _statusText = "Drag Here";
 
-        private DroppedContent _currentContent;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(TotalItemsCountString))]
+        private int _totalItems = 0;
 
-        public ICommand NoteCommand { get; }
-        public ICommand TodoCommand { get; }
-        public ICommand CancelCommand { get; }
+        public string TotalItemsCountString => $"{TotalItems} Item{(TotalItems > 1 ? "s" : "")}";
+
+        private readonly List<DroppedContent> _accumulatedContents = new();
+
+        public IRelayCommand NoteCommand { get; }
+        public IRelayCommand TodoCommand { get; }
+        public IRelayCommand InsertCommand { get; }
+        public IRelayCommand CancelCommand { get; }
+        public IRelayCommand ClearAllCommand { get; }
 
         public FloatingViewModel()
         {
             NoteCommand = new AsyncRelayCommand(() => ProcessContentAsync(NoteType.Note));
             TodoCommand = new AsyncRelayCommand(() => ProcessContentAsync(NoteType.Todo));
+            InsertCommand = new AsyncRelayCommand(ProcessInsertAsync);
             CancelCommand = new RelayCommand(ResetState);
+            ClearAllCommand = new RelayCommand(ResetState);
         }
 
         public void OnDragEnter()
@@ -66,58 +77,68 @@ namespace Drag2Note.ViewModels
             var content = DragDropService.Instance.ProcessDrop(data);
             if (content.IsValid)
             {
-                _currentContent = content;
+                _accumulatedContents.Add(content);
+                TotalItems = _accumulatedContents.Count;
                 CurrentState = FloatingWindowState.Decision;
                 StatusText = ""; 
             }
             else
             {
-                StatusText = "Invalid Content";
-                Task.Delay(1000).ContinueWith(_ => ResetState(), TaskScheduler.FromCurrentSynchronizationContext());
+                if (_accumulatedContents.Count == 0)
+                {
+                    StatusText = "Invalid Content";
+                    Task.Delay(1000).ContinueWith(_ => ResetState(), TaskScheduler.FromCurrentSynchronizationContext());
+                }
+                else
+                {
+                    CurrentState = FloatingWindowState.Decision;
+                    StatusText = "";
+                }
             }
         }
 
         private async Task ProcessContentAsync(NoteType type)
         {
-            if (_currentContent == null || !_currentContent.IsValid) return;
+            if (_accumulatedContents.Count == 0) return;
 
             CurrentState = FloatingWindowState.Processing;
             StatusText = "Saving...";
 
-            // 1. Create Metadata Item
+            // 1. Create Metadata Item first to get ID
             var item = new MetadataItem
             {
-                Type = type,
-                Tags = new List<string>() // Empty for now
+                Type = type
             };
+            
+            // Create specific folder for this item
+            string itemFolder = StorageService.Instance.CreateItemDirectory(type, item.Id);
 
-            // 2. Handle Content
-            if (_currentContent.ContentType == DropContentType.Text || _currentContent.ContentType == DropContentType.Url)
+            // 2. Bundle all content according to PRD
+            string combinedMarkdown = await StorageService.Instance.BundleResourcesAsync(itemFolder, _accumulatedContents);
+
+            // Set preview and title from the first meaningful item
+            var firstContent = _accumulatedContents.First();
+            if (firstContent.ContentType == DropContentType.Text || firstContent.ContentType == DropContentType.Url)
             {
-                string content = _currentContent.ContentType == DropContentType.Url ? _currentContent.Url : _currentContent.TextContent;
-                item.PreviewText = content.Length > 50 ? content.Substring(0, 50) + "..." : content;
-                
-                // Save text to MD file (pass type)
-                // Returns full path now
-                string fullPath = await StorageService.Instance.SaveMarkdownAsync(content, type);
-                item.FilePath = fullPath;
+                string text = firstContent.ContentType == DropContentType.Url ? firstContent.Url : firstContent.TextContent;
+                item.PreviewText = text.Length > 50 ? text.Substring(0, 50) + "..." : text;
+                string snippet = text.Trim().Split('\n')[0];
+                if (snippet.Length > 30) snippet = snippet.Substring(0, 30) + "...";
+                item.CustomTitle = snippet;
             }
-            else if (_currentContent.ContentType == DropContentType.Files)
+            else if (firstContent.ContentType == DropContentType.Files)
             {
-                item.PreviewText = $"{_currentContent.FilePaths.Count} File(s)";
-                
-                // Create Shortcuts
-                foreach (var path in _currentContent.FilePaths)
+                item.PreviewText = $"{firstContent.FilePaths.Count} File(s)";
+                if (firstContent.FilePaths.Count > 0)
                 {
-                    string name = Path.GetFileName(path) + ".lnk";
-                    // Pass type to shortcut creation to put in correct folder
-                    await StorageService.Instance.CreateShortcutAsync(path, name, type);
+                    item.CustomTitle = Path.GetFileName(firstContent.FilePaths[0]);
                 }
-                
-                string fileListMd = string.Join(Environment.NewLine, _currentContent.FilePaths.Select(p => p)); 
-                string fullPath = await StorageService.Instance.SaveMarkdownAsync(fileListMd, type);
-                item.FilePath = fullPath;
             }
+
+            // Save final markdown
+            string finalContent = type == NoteType.Todo ? $"- [ ] {Environment.NewLine}{combinedMarkdown}" : combinedMarkdown;
+            string fullPath = await StorageService.Instance.SaveMarkdownAsync(itemFolder, finalContent);
+            item.FilePath = fullPath;
 
             // 3. Save Metadata
             await MetadataService.Instance.AddItemAsync(item);
@@ -126,11 +147,28 @@ namespace Drag2Note.ViewModels
             ResetState();
         }
 
+        private async Task ProcessInsertAsync()
+        {
+            if (_accumulatedContents.Count == 0) return;
+            
+            // 1. Stash content and notify MainViewModel
+            var mainVm = WindowManager.Instance.MainWindow?.DataContext as ViewModels.MainViewModel;
+            if (mainVm != null)
+            {
+                mainVm.SetSelectionMode(new List<DroppedContent>(_accumulatedContents));
+                WindowManager.Instance.ShowMainWindow();
+            }
+
+            // 2. Clear Floating Window
+            ResetState();
+        }
+
         private void ResetState()
         {
             CurrentState = FloatingWindowState.Idle;
             StatusText = "Drag Here";
-            _currentContent = null;
+            _accumulatedContents.Clear();
+            TotalItems = 0;
         }
     }
 }

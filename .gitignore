@@ -481,4 +481,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # Vim temporary swap files
-*.swp
+# User Data Store
+UserData/

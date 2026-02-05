@@ -9,11 +9,13 @@ namespace Drag2Note.Services.Data
 {
     public class MetadataService
     {
-        private static MetadataService _instance;
+        private static MetadataService? _instance;
         public static MetadataService Instance => _instance ??= new MetadataService();
 
+        public event EventHandler? DataChanged;
+
         private readonly string _metadataFilePath;
-        private AppData _cachedData;
+        private AppData _cachedData = new AppData();
 
         private MetadataService()
         {
@@ -21,7 +23,7 @@ namespace Drag2Note.Services.Data
             LoadData(); // Load synchronously on init or make Init async
         }
 
-        private void LoadData()
+        public void LoadData()
         {
             if (File.Exists(_metadataFilePath))
             {
@@ -41,11 +43,18 @@ namespace Drag2Note.Services.Data
             }
         }
 
+        public void Reload()
+        {
+            LoadData();
+            DataChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public async Task SaveDataAsync()
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
             string json = JsonSerializer.Serialize(_cachedData, options);
             await File.WriteAllTextAsync(_metadataFilePath, json);
+            DataChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public AppData GetData()
@@ -57,6 +66,16 @@ namespace Drag2Note.Services.Data
         {
             _cachedData.Items.Add(item);
             await SaveDataAsync();
+        }
+
+        public async Task RemoveItemAsync(string itemId)
+        {
+            var item = _cachedData.Items.FirstOrDefault(i => i.Id == itemId);
+            if (item != null)
+            {
+                _cachedData.Items.Remove(item);
+                await SaveDataAsync();
+            }
         }
     }
 }

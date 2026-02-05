@@ -5,21 +5,58 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Drag2Note.ViewModels"
         mc:Ignorable="d"
-        Title="Drag2Note Floating Window" Height="300" Width="300"
+        Title="Drag2Note-Lite Floating Window" 
         WindowStyle="None" AllowsTransparency="True" Topmost="True"
-        Background="Transparent" AllowDrop="True">
+        Background="Transparent" AllowDrop="True" DragLeave="FloatingWindow_DragLeave"
+        SizeToContent="WidthAndHeight" ResizeMode="NoResize">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
+        <Style x:Key="DecisionButtonStyle" TargetType="Button">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Background" Value="{DynamicResource WindowBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="MinWidth" Value="110"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="17">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource MenuItemHover}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
-    <Border CornerRadius="20" BorderBrush="Gray" BorderThickness="1" Background="{StaticResource BeigeBrush}">
+    <Grid Margin="20">
+        <Border Width="280" Height="280" CornerRadius="25" Background="{DynamicResource WindowBackground}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+            MouseRightButtonDown="Window_MouseRightButtonDown">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.15"/>
+        </Border.Effect>
         <Grid>
             <!-- Status Text (Idle, Hover, Processing) -->
             <TextBlock Text="{Binding StatusText}" 
                        HorizontalAlignment="Center" 
                        VerticalAlignment="Center"
-                       FontSize="24"
+                       FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
                        TextWrapping="Wrap" TextAlignment="Center">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
@@ -33,10 +70,10 @@
                 </TextBlock.Style>
             </TextBlock>
 
-            <!-- Decision Buttons -->
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical">
-                <StackPanel.Style>
-                    <Style TargetType="StackPanel">
+            <!-- Decision UI -->
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding CurrentState}" Value="Decision">
@@ -44,12 +81,41 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </StackPanel.Style>
+                </Grid.Style>
 
-                <Button Content="Note" Command="{Binding NoteCommand}" Width="100" Height="40" Margin="5"/>
-                <Button Content="To-do" Command="{Binding TodoCommand}" Width="100" Height="40" Margin="5"/>
-                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="30" Margin="5" Background="Transparent" BorderThickness="0"/>
-            </StackPanel>
+                <!-- Item Counter Bubble -->
+                <Border Background="#FF5F57" CornerRadius="10" Padding="8,2" 
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+                    <TextBlock Text="{Binding TotalItemsCountString}" Foreground="White" FontSize="10" FontWeight="Bold"/>
+                </Border>
+
+                <!-- Vertical Button Group -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Command="{Binding NoteCommand}" Style="{StaticResource DecisionButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📝" Margin="0,0,8,0" FontSize="14"/>
+                            <TextBlock Text="笔记" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding TodoCommand}" Style="{StaticResource DecisionButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="✅" Margin="0,0,8,0" FontSize="14"/>
+                            <TextBlock Text="待办" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding InsertCommand}" Style="{StaticResource DecisionButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📌" Margin="0,0,8,0" FontSize="14"/>
+                            <TextBlock Text="插入" FontSize="13"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- Footer tip -->
+                <TextBlock Text="r-click to cancel" Foreground="{DynamicResource TextSecondary}" FontSize="10" 
+                           HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,12"/>
+            </Grid>
         </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </Window>
