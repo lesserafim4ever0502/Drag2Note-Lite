@@ -19,7 +19,7 @@ Drag2Note-Lite is a lightweight, efficient Windows desktop note-taking applicati
 ### 🚀 Getting Started
 1. Download the latest `Drag2Note-Lite_Setup.exe` from the [Releases](https://github.com/lesserafim4ever0502/Drag2Note-Lite/releases) (if available) or build from source.
 2. Run the installer and choose your installation path.
-3. Use `Alt+Q` (default) to quickly focus the dashboard.
+3. Use `Ctrl+Alt+Q` (default) to quickly focus the dashboard.
 
 ---
 
@@ -40,7 +40,7 @@ Drag2Note-Lite 是一款轻量、高效的 Windows 桌面记事应用，专为�
 ### 🚀 快速开始
 1. 下载最新的 `Drag2Note-Lite_Setup.exe` 并安装。
 2. 运行安装程序并选择安装路径。
-3. 使用 `Alt+Q`（默认）快速聚焦搜索框。
+3. 使用 `Ctrl+Alt+Q`（默认）快速聚焦搜索框。
 
 ---
 
