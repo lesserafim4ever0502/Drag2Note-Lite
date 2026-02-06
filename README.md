@@ -6,7 +6,7 @@
 
 Drag2Note-Lite is a minimal yet powerful productivity tool designed to capture information as fast as you can think. By dragging text, images, or files onto a floating drop zone, you can instantly turn transient thoughts into structured, searchable notes.
 
-![Hero Image](https://raw.githubusercontent.com/lesserafim4ever0502/Drag2Note-Lite/main/Assets/hero.png)
+![Hero Image](Screenshot/windows.png)
 
 ## 🌟 Why Drag2Note-Lite?
 
@@ -14,23 +14,32 @@ In a world of bloated, cloud-dependent note apps, Drag2Note-Lite stands out by f
 1.  **Speed**: Zero-latency startup and instant capture via global hotkeys.
 2.  **Privacy**: 100% Request-free. Your data lives on your disk, not our servers.
 3.  **Aesthetics**: A meticulously crafted WPF UI that feels native yet premium.
+4.  **Lightweight**: Optimized performance with minimal footprint (~50MB RAM).
 
 ---
 
 ## ✨ Key Features
 
 ### 🖱️ Advanced Drag & Drop Workflow
+> **Drag any content to the floating ball to capture instantly.**
+
+![Floating Interaction](Screenshot/Floating-decision.png)
+
 We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
 - **Card Reordering**: Powered by `GongSolutions.WPF.DragDrop` for smooth, animated list sorting with ghost adorners.
 - **Tag Management**: Custom native implementation allow you to drag tags *within* draggable cards without conflicts.
 - **File Capture**: Drag any file onto the floating ball to create a note. Images are auto-previewed; text files are parsed.
 
 ### 🏷️ Smart & Fluid Tagging
+![Editor & Tagging](Screenshot/card-edit.png)
+
 - **Auto-Date Tags**: Automatically tags new notes with `YYYY-MM-DD`.
 - **Drag-to-Sort**: Reorder tags just like you reorder notes.
 - **Inline Editing**: Double-click any tag to rename it.
 
 ### 🎨 Adaptive UI / UX
+![Dark Mode](Screenshot/windows-dark.png)
+
 - **True Dark Mode**: The UI (including hover states, specialized buttons, and text contrast) adapts perfectly to your system theme.
 - **Refined Interactions**: 
   - **Capsule Toggles**: Smooth transitions between "Notes/Todo" and "Edit/Preview".
