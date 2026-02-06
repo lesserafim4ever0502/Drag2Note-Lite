@@ -1,53 +1,110 @@
 # Drag2Note-Lite
 
-[English](#english) | [简体中文](#chinese)
+> **A Lightweight, "Drag-First" Desktop Note-Taking App for Windows.**
+>
+> 🌐 **[简体中文 (Simplified Chinese)](README-CN.md)**
 
-<a name="english"></a>
+Drag2Note-Lite is a minimal yet powerful productivity tool designed to capture information as fast as you can think. By dragging text, images, or files onto a floating drop zone, you can instantly turn transient thoughts into structured, searchable notes.
 
-## English
+![Hero Image](https://raw.githubusercontent.com/lesserafim4ever0502/Drag2Note-Lite/main/Assets/hero.png)
 
-Drag2Note-Lite is a lightweight, efficient Windows desktop note-taking application designed for quick information capture via drag-and-drop. It extracts content from files and images into searchable, tagged notes.
+## 🌟 Why Drag2Note-Lite?
 
-### 🌟 Features / 功能特性
-- **Advanced Drag & Drop / 高级拖拽**: 
-  - **Native & Library Hybrid**: Combines `GongSolutions.WPF.DragDrop` for smooth card reordering with custom logic for tag management.
-  - **Ghost Adorners**: Semitransparent benchmarks for a premium dragging experience.
-  - **混合拖拽引擎**: 结合了 `GongSolutions` 的成熟排序算法与自定义的 `CardListDragSource`，完美解决嵌套组件（Tag）的拖拽冲突。
-- **Smart Tagging / 智能标签**: 
-  - Automatically adds creation date tags.
-  - Supports custom tag creation, dragging, and auto-wrapping layout.
-  - 自动日期标签 + 自定义标签，支持独立拖拽排序。
-- **Portable & Minimalist / 便携极简**: 
-  - Data stored locally in `UserData`. No cloud, no login.
-  - 纯本地存储，无云端依赖。
-- **Adaptive UI / 自适应界面**: 
-  - **True Dark Mode**: Styles (including hover states) adapt dynamically to system theme.
-  - **Fluid Animations**: Custom `ControlTemplate` for interactive elements (e.g., rounded Back button with hover effects).
-  - 完美适配深色模式，拥有流畅的 CSS 级动效与圆角交互体验。
-- **Global Hotkeys**: Quick access via `Ctrl+Alt+Q`.
-
-### 🚀 Getting Started / 快速开始
-1. Download the latest release or build from source.
-2. Run `Drag2Note-Lite.exe`.
-3. Use global hotkey or drag files to the floating window.
+In a world of bloated, cloud-dependent note apps, Drag2Note-Lite stands out by focusing on:
+1.  **Speed**: Zero-latency startup and instant capture via global hotkeys.
+2.  **Privacy**: 100% Request-free. Your data lives on your disk, not our servers.
+3.  **Aesthetics**: A meticulously crafted WPF UI that feels native yet premium.
 
 ---
 
-## 🛠 Tech Stack / 技术栈
-- **Core Framework**: .NET 8.0, WPF
-- **Language**: C# 12, XAML
-- **MVVM**: CommunityToolkit.Mvvm
-- **Data Persistence**: JSON (Metadata) + Markdown (Content)
-- **Key Libraries**:
-  - `GongSolutions.WPF.DragDrop`: For advanced drag-and-drop interactions.
-  - `NHotkey.Wpf`: For global keyboard shortcuts.
-- **Design System**: 
-  - Custom XAML Resource Dictionary for theming.
-  - Responsive layouts with `UniformGrid` and `WrapPanel`.
+## ✨ Key Features
 
-## 📄 License / 许可证
-MIT License
+### 🖱️ Advanced Drag & Drop Workflow
+We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
+- **Card Reordering**: Powered by `GongSolutions.WPF.DragDrop` for smooth, animated list sorting with ghost adorners.
+- **Tag Management**: Custom native implementation allow you to drag tags *within* draggable cards without conflicts.
+- **File Capture**: Drag any file onto the floating ball to create a note. Images are auto-previewed; text files are parsed.
 
-## 🙏 Credits / 致谢
-- **GongSolutions.WPF.DragDrop** for the amazing drag library.
-- Icons by Icons8 & Iconfont.
+### 🏷️ Smart & Fluid Tagging
+- **Auto-Date Tags**: Automatically tags new notes with `YYYY-MM-DD`.
+- **Drag-to-Sort**: Reorder tags just like you reorder notes.
+- **Inline Editing**: Double-click any tag to rename it.
+
+### 🎨 Adaptive UI / UX
+- **True Dark Mode**: The UI (including hover states, specialized buttons, and text contrast) adapts perfectly to your system theme.
+- **Refined Interactions**: 
+  - **Capsule Toggles**: Smooth transitions between "Notes/Todo" and "Edit/Preview".
+  - **Rounded Controls**: Custom `ControlTemplates` for buttons ensures every click feels tactile.
+
+### 🛠️ Developer-First Architecture
+- **Clean MVVM**: Built on `CommunityToolkit.Mvvm` for a separation of concerns.
+- **Local-First JSON**: Data is stored in a human-readable `metadata.json` and standard Markdown files.
+- **Build It Yourself**: No proprietary magic. Requires .NET 8.0 SDK.
+
+---
+
+## 🚀 Getting Started
+
+### Installation
+1.  Go to the [Releases](https://github.com/lesserafim4ever0502/Drag2Note-Lite/releases) page.
+2.  Download `Drag2Note-Lite_Setup.exe` (or the portable `.zip`).
+3.  Run the application.
+
+### Basic Usage
+- **Global Hotkey**: Press `Ctrl + Alt + Q` to toggle the main dashboard.
+- **Capture**: Drag a file onto the floating ball (bottom right of screen).
+- **Edit**: Click a card to enter "Editor Mode".
+- **Preview**: Toggle the "Eye" icon to render Markdown.
+
+---
+
+## 🛠 Technology Stack
+
+This project works because of these amazing open-source technologies:
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Core** | .NET 8.0 (C# 12) | High-performance runtime. |
+| **UI Framework** | WPF (Windows Presentation Foundation) | Hardware-accelerated desktop UI. |
+| **Architecture** | MVVM (CommunityToolkit) | Clean code structure and binding. |
+| **Drag & Drop** | GongSolutions.WPF.DragDrop | Complex drag interactions. |
+| **Input** | NHotkey.Wpf | Global keyboard hooks. |
+| **System** | Hardcodet.NotifyIcon | System tray integration. |
+
+---
+
+## 📂 Project Structure
+
+For a detailed breakdown of the codebase, please refer to our **[Code Map (CODEMAP.md)](CODEMAP.md)**.
+
+```
+Drag2Note/
+├── Views/              # XAML UI Definitions
+├── ViewModels/         # Application Logic
+├── Models/             # Data Structures
+├── Services/           # File I/O & Business Logic
+└── UserData/           # Your Notes (Local Storage)
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+1.  Fork the repository.
+2.  Create a feature branch (`git checkout -b feature/amazing-feature`).
+3.  Commit your changes (`git commit -m 'Add amazing feature'`).
+4.  Push to the branch.
+5.  Open a Pull Request.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## 🙏 Acknowledgements
+
+- **GongSolutions** for the incredible drag-drop library.
+- **Microsoft** for the modern .NET ecosystem.
+- **Icons8** for the visual assets.
