@@ -10,7 +10,7 @@
         Title="Drag2Note-Lite Dashboard" Height="680" Width="400"
         MinWidth="400" MaxWidth="400"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        ResizeMode="CanResizeWithGrip"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
