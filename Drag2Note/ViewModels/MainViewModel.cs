@@ -51,6 +51,40 @@ namespace Drag2Note.ViewModels
             }
         }
 
+        private MetadataItem? _selectedItem;
+        public MetadataItem? SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                // Auto-save rename if changing selection
+                // If we are currently renaming an item AND the selected item is changing
+                // AND the old selected item is not null, then save the rename for the old item.
+                if (IsRenaming && _selectedItem != null && value != _selectedItem)
+                {
+                    // Save the renaming text to the old selected item's CustomTitle
+                    _selectedItem.CustomTitle = RenamingText;
+                    _ = MetadataService.Instance.SaveDataAsync();
+                    IsRenaming = false; // Exit renaming mode after saving
+                }
+
+                // Now, proceed with setting the new selected item
+                if (SetProperty(ref _selectedItem, value))
+                {
+                    OnSelectedItemChanged(value);
+                    IsRenaming = false; // Ensure renaming mode is exited when selection changes
+                }
+            }
+        }
+
+        private void OnSelectedItemChanged(MetadataItem? value)
+        {
+            if (value != null && IsSelectionMode && _stashedContents != null)
+            {
+                _ = ExecuteInsertionAsync(value);
+            }
+        }
+
         [ObservableProperty]
         private bool _isEditorActive;
 
@@ -70,18 +104,7 @@ namespace Drag2Note.ViewModels
         private ObservableCollection<MarkdownBlock> previewBlocks = new();
 
         [ObservableProperty]
-        private MetadataItem? _selectedItem;
-
-        [ObservableProperty]
         private bool _isSelectionMode;
-
-        partial void OnSelectedItemChanged(MetadataItem? value)
-        {
-            if (value != null && IsSelectionMode && _stashedContents != null)
-            {
-                _ = ExecuteInsertionAsync(value);
-            }
-        }
 
         private List<DroppedContent>? _stashedContents;
 
@@ -523,7 +546,7 @@ namespace Drag2Note.ViewModels
 
         private async void SaveRename()
         {
-            if (SelectedItem == null || !IsRenaming) return;
+            if (SelectedItem == null) return;
             
             SelectedItem.CustomTitle = RenamingText;
             // TODO: Actually rename the directory if needed, or just update metadata
@@ -597,6 +620,9 @@ namespace Drag2Note.ViewModels
         {
             if (item == null || item.Type != Models.NoteType.Todo) return;
 
+            // Preserve ID to restore selection after sort
+            string currentId = item.Id;
+
             item.Status = item.Status == Models.TodoStatus.Pending ? Models.TodoStatus.Completed : Models.TodoStatus.Pending;
             
             // Sync with file
@@ -607,6 +633,13 @@ namespace Drag2Note.ViewModels
             
             // Sort and refresh
             RefreshFilteredItems();
+
+            // Restore selection
+            var restoredItem = FilteredItems.FirstOrDefault(i => i.Id == currentId);
+            if (restoredItem != null)
+            {
+                SelectedItem = restoredItem;
+            }
         }
     }
 }

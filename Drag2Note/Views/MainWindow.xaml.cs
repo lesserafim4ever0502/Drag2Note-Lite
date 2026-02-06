@@ -27,7 +27,6 @@ namespace Drag2Note.Views
                 ItemsListBox.Focus();
                 UpdateDockState();
             };
-            this.MouseLeftButtonDown += MainWindow_MouseLeftButtonDown;
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;
             this.PreviewMouseLeftButtonDown += MainWindow_PreviewMouseLeftButtonDown;
             
@@ -184,28 +183,39 @@ namespace Drag2Note.Views
 
         private void MainWindow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (DataContext is MainViewModel vm && vm.IsRenaming)
+            // 0. Ignore if clicking ON a TextBox (let it handle input/focus)
+            if (e.OriginalSource is System.Windows.Controls.TextBox) return;
+
+            // 1. Try to find the currently focused NoteCard and Force Commit
+            var focused = System.Windows.Input.Keyboard.FocusedElement as DependencyObject;
+            if (focused is System.Windows.Controls.TextBox)
             {
-                var source = e.OriginalSource as DependencyObject;
-                bool isEditableInput = false;
-
-                while (source != null)
+                var card = FindParent<Drag2Note.Views.Components.NoteCard>(focused);
+                if (card != null)
                 {
-                    if (source is System.Windows.Controls.TextBox || source is System.Windows.Controls.PasswordBox)
-                    {
-                        isEditableInput = true;
-                        break;
-                    }
-                    source = System.Windows.Media.VisualTreeHelper.GetParent(source);
+                    card.CommitEdits();
                 }
-
-                if (!isEditableInput)
+                else if (DataContext is MainViewModel vm && vm.IsRenaming)
                 {
-                    // Force focus to a non-input element to trigger LostFocus on renaming TextBox
-                    Keyboard.ClearFocus();
-                    this.Focus();
+                    // Fallback: If focused is a TextBox but not in a card (e.g. somehow?), ensure Rename saves
+                    vm.SaveRenameCommand.Execute(null);
                 }
             }
+            
+            // 2. Force Global Focus Clear (Since we clicked background)
+            // This ensures visual states update (e.g. selection borders might change)
+            System.Windows.Input.Keyboard.ClearFocus();
+            this.Focus();
+        }
+
+        private T? FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            while (child != null)
+            {
+                if (child is T t) return t;
+                child = System.Windows.Media.VisualTreeHelper.GetParent(child);
+            }
+            return null;
         }
 
         private void MainWindow_SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
@@ -217,7 +227,7 @@ namespace Drag2Note.Views
             }
         }
 
-        private void MainWindow_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Only DragMove if we are clicking on background or top header area (Row 0)
             if (e.ButtonState == MouseButtonState.Pressed)

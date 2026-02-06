@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using Drag2Note.ViewModels;
 using Drag2Note.Models;
 using Drag2Note.Services.Data;
@@ -12,6 +13,26 @@ namespace Drag2Note.Views.Components
         public NoteCard()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Manually commits any active edits (Tag or Rename).
+        /// Can be called globally (e.g. by Window) to force save.
+        /// </summary>
+        public void CommitEdits()
+        {
+            // 1. Submit Tag if open
+            if (InlineTagEditor.Visibility == Visibility.Visible)
+            {
+                SubmitTag();
+            }
+
+            // 2. Submit Rename if active (Double check VM state)
+            var window = System.Windows.Window.GetWindow(this);
+            if (window?.DataContext is MainViewModel vm && vm.IsRenaming)
+            {
+                vm.SaveRenameCommand.Execute(null);
+            }
         }
 
         private void Title_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -27,12 +48,23 @@ namespace Drag2Note.Views.Components
 
         private void Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            // Defensive check: If clicking a TextBox, let it handle the event (focus, caret, etc.)
+            if (e.OriginalSource is System.Windows.Controls.TextBox) return;
+
+            // 1. Manually submit active editors (Active Detection)
+            CommitEdits();
+
             var window = System.Windows.Window.GetWindow(this);
             if (window?.DataContext is MainViewModel vm && DataContext is MetadataItem item)
             {
+                // 2. Select Card
                 _ = vm.SelectCard(item);
-                e.Handled = true; // Prevent bubbling to DragMove
             }
+
+            // 3. Force Focus & Mark Handled
+            // Explicitly focus container to ensure visual state updates
+            CardBorder.Focus();
+            e.Handled = true; // Prevent bubbling to DragMove
         }
 
         private void Grid_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -48,9 +80,30 @@ namespace Drag2Note.Views.Components
 
         private void TitleEditor_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (System.Windows.Window.GetWindow(this)?.DataContext is MainViewModel vm && vm.IsRenaming)
+            if (System.Windows.Window.GetWindow(this)?.DataContext is MainViewModel vm)
             {
+                // Unconditionally try to save if visible, let VM handle logic
                 vm.SaveRenameCommand.Execute(null);
+            }
+        }
+
+        private void TitleEditor_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (System.Windows.Window.GetWindow(this)?.DataContext is MainViewModel vm)
+                {
+                    vm.SaveRenameCommand.Execute(null);
+                }
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                if (System.Windows.Window.GetWindow(this)?.DataContext is MainViewModel vm)
+                {
+                    vm.IsRenaming = false; // Cancel
+                }
+                e.Handled = true;
             }
         }
 
@@ -118,8 +171,11 @@ namespace Drag2Note.Views.Components
             ShowTagEditor();
         }
 
+        private bool _isSubmittingTag = false;
+
         private void ShowTagEditor()
         {
+            _isSubmittingTag = false;
             InlineTagEditor.Visibility = Visibility.Visible;
             InlineTagEditor.Text = "";
             InlineTagEditor.Focus();
@@ -127,6 +183,7 @@ namespace Drag2Note.Views.Components
 
         private void InlineTagEditor_LostFocus(object sender, RoutedEventArgs e)
         {
+            // When focus is lost, we should try to submit
             SubmitTag();
         }
 
@@ -139,6 +196,7 @@ namespace Drag2Note.Views.Components
             }
             else if (e.Key == Key.Escape)
             {
+                _isSubmittingTag = true; // Prevent submission on lost focus
                 InlineTagEditor.Visibility = Visibility.Collapsed;
                 e.Handled = true;
             }
@@ -146,8 +204,9 @@ namespace Drag2Note.Views.Components
 
         private void SubmitTag()
         {
-            if (InlineTagEditor.Visibility != Visibility.Visible) return;
-            
+            if (_isSubmittingTag) return;
+            _isSubmittingTag = true;
+
             string newTag = InlineTagEditor.Text.Trim();
             InlineTagEditor.Visibility = Visibility.Collapsed;
 

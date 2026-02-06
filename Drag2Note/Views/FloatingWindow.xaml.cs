@@ -38,7 +38,40 @@ namespace Drag2Note.Views
              if (e.ButtonState == MouseButtonState.Pressed)
              {
                  this.DragMove();
+                 // Auto-snap to screen edges on release
+                 SnapToEdges();
              }
+        }
+
+        private void SnapToEdges()
+        {
+            // Get screen work area (excludes taskbar)
+            // Note: This logic primarily supports the primary screen. 
+            // For multi-monitor, explicit screen detection would be needed, 
+            // but WorkArea often defaults to the screen where the window is mostly located in newer .NET versions or acts on primary.
+            // For a "Lite" tool, snapping to primary work area is the expected baseline.
+            var workArea = SystemParameters.WorkArea;
+            double tolerance = 15.0;
+
+            // Horizontal Snap & Clamp
+            if (this.Left < workArea.Left + tolerance) 
+            {
+                this.Left = workArea.Left;
+            }
+            else if (this.Left + this.Width > workArea.Right - tolerance)
+            {
+                this.Left = workArea.Right - this.Width;
+            }
+            
+            // Vertical Snap & Clamp
+            if (this.Top < workArea.Top + tolerance)
+            {
+                this.Top = workArea.Top;
+            }
+            else if (this.Top + this.Height > workArea.Bottom - tolerance)
+            {
+                this.Top = workArea.Bottom - this.Height;
+            }
         }
 
         private void FloatingWindow_DragEnter(object sender, System.Windows.DragEventArgs e)

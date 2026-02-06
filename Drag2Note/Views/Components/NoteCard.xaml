@@ -11,7 +11,7 @@
              MinHeight="110"
              MouseDoubleClick="Grid_MouseDoubleClick">
     <Border x:Name="CardBorder" CornerRadius="10" Padding="15" BorderThickness="1"
-            MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+            MouseLeftButtonDown="Grid_MouseLeftButtonDown" Focusable="True">
         <Border.Style>
             <Style TargetType="Border">
                 <Setter Property="Background" Value="{DynamicResource WindowBackground}"/>
@@ -82,6 +82,7 @@
                          Padding="2,0" Margin="-3,-2" MinHeight="24"
                          LostFocus="TitleEditor_LostFocus"
                          IsVisibleChanged="TitleEditor_IsVisibleChanged"
+                         KeyDown="TitleEditor_KeyDown"
                          FocusVisualStyle="{x:Null}">
                     <TextBox.Style>
                         <Style TargetType="TextBox">

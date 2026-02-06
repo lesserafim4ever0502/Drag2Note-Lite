@@ -10,7 +10,9 @@
         Title="Drag2Note-Lite Dashboard" Height="680" Width="400"
         MinWidth="400" MaxWidth="400"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        ResizeMode="CanResize" WindowStartupLocation="CenterScreen">
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -25,6 +27,10 @@
 
     <Window.InputBindings>
         <KeyBinding Key="Q" Modifiers="Alt" Command="{Binding FocusSearchCommand}"/>
+        <!-- Global Delete Shortcut for Selected Item -->
+        <KeyBinding Key="Delete" Command="{Binding DeleteItemCommand}"/>
+        <!-- Global Backspace Shortcut for Toggling Todo (Check/Uncheck) -->
+        <KeyBinding Key="Back" Command="{Binding ToggleTodoStatusCommand}" CommandParameter="{Binding SelectedItem}"/>
     </Window.InputBindings>
 
     <Window.Resources>
@@ -41,6 +47,12 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="#555"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -52,7 +64,41 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="#000"/>
+                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.1"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.95" Duration="0:0:0.05"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.95" Duration="0:0:0.05"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.05"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.05"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -63,7 +109,14 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Width" Value="24"/>
+            <Setter Property="Width" Value="24"/>
             <Setter Property="Height" Value="24"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -74,6 +127,40 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bg" Property="Background" Value="#1A000000"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.2" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.2" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                             <Trigger Property="IsPressed" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.9" Duration="0:0:0.05"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.9" Duration="0:0:0.05"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.2" Duration="0:0:0.05"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.2" Duration="0:0:0.05"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -86,7 +173,14 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="MinWidth" Value="32"/>
+            <Setter Property="MinWidth" Value="32"/>
             <Setter Property="Height" Value="32"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -97,6 +191,40 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="bg" Property="Background" Value="#F0F2F5"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.1" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.1" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.9" Duration="0:0:0.05"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.9" Duration="0:0:0.05"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.1" Duration="0:0:0.05"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.1" Duration="0:0:0.05"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -125,6 +253,12 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -134,6 +268,44 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.1"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.1"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                   <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.95" Duration="0:0:0.05"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.95" Duration="0:0:0.05"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.05" Duration="0:0:0.05"/>
+                                <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.05" Duration="0:0:0.05"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="ScrollBar">
@@ -261,13 +433,34 @@
                     <!-- Back Button (Editor Mode Only) -->
                     <Button Content="‹ Back" 
                             HorizontalAlignment="Left" VerticalAlignment="Center"
-                            Padding="0,0,0,0" Foreground="#718096" FontSize="14"
+                            Padding="8,4,8,4" Foreground="#718096" FontSize="14"
                             Command="{Binding CloseEditorCommand}"
                             Background="Transparent" BorderThickness="0" Cursor="Hand"
                             FocusVisualStyle="{x:Null}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="BackButtonBorder" 
+                                                    Background="Transparent" 
+                                                    CornerRadius="8" 
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="BackButtonBorder" Property="Background" Value="#F0F2F5"/>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="BackButtonBorder" Property="Background" Value="#E2E8F0"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsEditorActive}" Value="True">
                                         <Setter Property="Visibility" Value="Visible"/>
@@ -536,99 +729,127 @@
                                      Padding="15,10,15,10"
                                      Visibility="{Binding IsPreviewMode, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
 
-                            <!-- Preview Mode -->
-                            <ScrollViewer Visibility="{Binding IsPreviewMode, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                                          Padding="15,0">
-                                <ItemsControl ItemsSource="{Binding PreviewBlocks}" Margin="0,0,0,20" HorizontalContentAlignment="Stretch">
-                                    <ItemsControl.Resources>
-                                        <!-- Text Template -->
-                                        <DataTemplate x:Key="TextTemplate">
-                                            <TextBlock Text="{Binding Content}" TextWrapping="Wrap" TextAlignment="Justify"
-                                                       FontSize="14" Foreground="{DynamicResource TextPrimary}" LineHeight="20"/>
-                                        </DataTemplate>
+                            <!-- Preview Mode (Virtualization Enabled) -->
+                            <ListBox ItemsSource="{Binding PreviewBlocks}" 
+                                     Visibility="{Binding IsPreviewMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.CanContentScroll="True"
+                                     VirtualizingPanel.IsVirtualizing="True"
+                                     VirtualizingPanel.ScrollUnit="Pixel"
+                                     VirtualizingPanel.VirtualizationMode="Recycling"
+                                     Padding="15,0" Margin="0,0,0,20" 
+                                     BorderThickness="0" Background="Transparent"
+                                     HorizontalContentAlignment="Stretch">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Margin" Value="0,0,0,0"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Focusable" Value="False"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListBoxItem">
+                                                    <ContentPresenter />
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
 
-                                        <DataTemplate x:Key="ImageTemplate">
-                                            <Button Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding}" Background="Transparent" Padding="0" BorderThickness="0" 
-                                                    Cursor="Hand" FocusVisualStyle="{x:Null}">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border Margin="0,5,0,5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" HorizontalAlignment="Stretch" CornerRadius="12">
-                                                            <Grid>
-                                                                <Border x:Name="ClipBorder" Background="White" CornerRadius="12"/>
-                                                                <Image Source="{Binding ResolvedPath, Converter={StaticResource ImagePreviewConverter}}" 
-                                                                       MaxWidth="800" Stretch="Uniform"
-                                                                       HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality">
-                                                                    <Image.OpacityMask>
-                                                                        <VisualBrush Visual="{Binding ElementName=ClipBorder}"/>
-                                                                    </Image.OpacityMask>
-                                                                </Image>
-                                                            </Grid>
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Button.Template>
-                                            </Button>
-                                        </DataTemplate>
+                                <ListBox.Resources>
+                                    <!-- Text Template -->
+                                    <DataTemplate x:Key="TextTemplate">
+                                        <TextBlock Text="{Binding Content}" TextWrapping="Wrap" TextAlignment="Justify"
+                                                   FontSize="14" Foreground="{DynamicResource TextPrimary}" LineHeight="20"/>
+                                    </DataTemplate>
 
-                                        <!-- Link Template -->
-                                        <DataTemplate x:Key="LinkTemplate">
-                                            <Button Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding}" Cursor="Hand">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                         <TextBlock Text="{Binding Content}" TextDecorations="Underline" 
-                                                                    Foreground="{DynamicResource PrimaryBrush}" FontSize="14"/>
-                                                    </ControlTemplate>
-                                                </Button.Template>
-                                            </Button>
-                                        </DataTemplate>
+                                    <DataTemplate x:Key="ImageTemplate">
+                                        <Button Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" Background="Transparent" Padding="0" BorderThickness="0" 
+                                                Cursor="Hand" FocusVisualStyle="{x:Null}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Margin="0,5,0,5" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}" HorizontalAlignment="Stretch" CornerRadius="12">
+                                                        <Grid>
+                                                            <Border x:Name="ClipBorder" Background="White" CornerRadius="12"/>
+                                                            <!-- IsAsync=True for non-blocking UI -->
+                                                            <Image Source="{Binding ResolvedPath, Converter={StaticResource ImagePreviewConverter}, IsAsync=True}" 
+                                                                   MaxWidth="800" Stretch="Uniform"
+                                                                   HorizontalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality">
+                                                                <Image.OpacityMask>
+                                                                    <VisualBrush Visual="{Binding ElementName=ClipBorder}"/>
+                                                                </Image.OpacityMask>
+                                                            </Image>
+                                                        </Grid>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </DataTemplate>
 
-                                        <!-- Separator Template -->
-                                        <DataTemplate x:Key="SeparatorTemplate">
-                                             <Border Height="2" Background="{DynamicResource TextSecondary}" HorizontalAlignment="Stretch" Margin="0,15" SnapsToDevicePixels="True"/>
-                                        </DataTemplate>
+                                    <!-- Link Template -->
+                                    <DataTemplate x:Key="LinkTemplate">
+                                        <Button Command="{Binding DataContext.OpenLinkCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" Cursor="Hand">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                     <TextBlock Text="{Binding Content}" TextDecorations="Underline" 
+                                                                Foreground="{DynamicResource PrimaryBrush}" FontSize="14"/>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </DataTemplate>
 
-                                        <!-- Todo Template -->
-                                        <DataTemplate x:Key="TodoTemplate">
-                                            <StackPanel Orientation="Horizontal" Margin="0,5">
-                                                <CheckBox x:Name="TodoCheck" IsHitTestVisible="False" Margin="0,0,8,0" VerticalAlignment="Top" Padding="0,2,0,0"/>
-                                                <TextBlock Text="{Binding Content}" FontSize="14" Foreground="{DynamicResource TextPrimary}" 
-                                                           VerticalAlignment="Center" TextWrapping="Wrap" LineHeight="20"/>
-                                            </StackPanel>
-                                            <DataTemplate.Triggers>
-                                                <DataTrigger Binding="{Binding Target}" Value="Checked">
-                                                    <Setter TargetName="TodoCheck" Property="IsChecked" Value="True"/>
-                                                </DataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
+                                    <!-- Separator, Todo, etc. Templates (Preserved) -->
+                                    <DataTemplate x:Key="SeparatorTemplate">
+                                         <Border Height="2" Background="{DynamicResource TextSecondary}" HorizontalAlignment="Stretch" Margin="0,15" SnapsToDevicePixels="True"/>
+                                    </DataTemplate>
 
-                                        <!-- Template Selector logic via Trigger -->
-                                        <Style TargetType="ContentControl">
-                                            <Setter Property="ContentTemplate" Value="{StaticResource TextTemplate}"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Type}" Value="Image">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource ImageTemplate}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Type}" Value="Link">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource LinkTemplate}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Type}" Value="Separator">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource SeparatorTemplate}"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Type}" Value="TodoItem">
-                                                    <Setter Property="ContentTemplate" Value="{StaticResource TodoTemplate}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ItemsControl.Resources>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <ContentControl Content="{Binding}" Margin="0,5"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                                    <DataTemplate x:Key="TodoTemplate">
+                                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                                            <CheckBox x:Name="TodoCheck" IsHitTestVisible="False" Margin="0,0,8,0" VerticalAlignment="Top" Padding="0,2,0,0"/>
+                                            <TextBlock Text="{Binding Content}" FontSize="14" Foreground="{DynamicResource TextPrimary}" 
+                                                       VerticalAlignment="Center" TextWrapping="Wrap" LineHeight="20"/>
+                                        </StackPanel>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Target}" Value="Checked">
+                                                <Setter TargetName="TodoCheck" Property="IsChecked" Value="True"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ListBox.Resources>
+
+                                <!-- Template Selector via Style Triggers for ListBoxItem Content -->
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentControl Content="{Binding}">
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Text">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource TextTemplate}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Image">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource ImageTemplate}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Link">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource LinkTemplate}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="Separator">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource SeparatorTemplate}"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Type}" Value="TodoItem">
+                                                            <Setter Property="ContentTemplate" Value="{StaticResource TodoTemplate}"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </Grid>
                     </Grid>
                 </Border>
@@ -636,7 +857,7 @@
         </Grid>
 
         <!-- Selection Mode Indicator Overlay -->
-        <Grid Visibility="{Binding IsSelectionMode, Converter={StaticResource BooleanToVisibilityConverter}}" 
+        <Grid Grid.Row="0" Grid.RowSpan="3" Visibility="{Binding IsSelectionMode, Converter={StaticResource BooleanToVisibilityConverter}}" 
               VerticalAlignment="Bottom" Height="80" IsHitTestVisible="True" Background="Transparent">
             <!-- Floating Capsule Status Bar -->
             <Border Background="{DynamicResource PrimaryBrush}" CornerRadius="22" 

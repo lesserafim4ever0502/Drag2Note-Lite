@@ -69,12 +69,18 @@ namespace Drag2Note.ViewModels
             }
         }
 
-        public void OnDrop(System.Windows.IDataObject data)
+        public async void OnDrop(System.Windows.IDataObject data)
         {
             CurrentState = FloatingWindowState.Processing;
             StatusText = "Processing...";
+            
+            // Allow UI to update first
+            await Task.Delay(50); 
 
+            // Run processing on background thread if possible, or just after delay
+            // Since ProcessDrop might need STA, we keep it on UI thread but after a yield
             var content = DragDropService.Instance.ProcessDrop(data);
+            
             if (content.IsValid)
             {
                 _accumulatedContents.Add(content);
@@ -87,7 +93,8 @@ namespace Drag2Note.ViewModels
                 if (_accumulatedContents.Count == 0)
                 {
                     StatusText = "Invalid Content";
-                    Task.Delay(1000).ContinueWith(_ => ResetState(), TaskScheduler.FromCurrentSynchronizationContext());
+                    await Task.Delay(1000);
+                    ResetState();
                 }
                 else
                 {
