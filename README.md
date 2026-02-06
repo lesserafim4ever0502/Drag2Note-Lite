@@ -25,16 +25,10 @@ In a world of bloated, cloud-dependent note apps, Drag2Note-Lite stands out by f
 ### 🖱️ Advanced Drag & Drop Workflow
 > **Drag any content to the floating ball to capture instantly.**
 
-<table align="center" border="0">
-  <tr>
-    <td align="center" valign="middle">
-      <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" />
-    </td>
-    <td align="center" valign="middle">
-      <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" style="margin-right: 20px" />
+  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
+</p>
 
 We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
 - **Card Reordering**: Powered by `GongSolutions.WPF.DragDrop` for smooth, animated list sorting with ghost adorners.
@@ -121,7 +115,7 @@ Drag2Note/
 ├── ViewModels/         # Application Logic
 ├── Models/             # Data Structures
 ├── Services/           # File I/O & Business Logic
-└── UserData/           # Your Notes (Local Storage)
+└── UserData/           # 你的笔记 (本地存储)
 ```
 
 ---

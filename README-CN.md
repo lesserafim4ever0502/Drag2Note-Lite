@@ -25,16 +25,10 @@ Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的�
 ### 🖱️ 高级拖拽工作流 (Hybrid Drag Engine)
 > **将任何内容拖到悬浮球即可瞬间捕获。**
 
-<table align="center" border="0">
-  <tr>
-    <td align="center" valign="middle">
-      <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" />
-    </td>
-    <td align="center" valign="middle">
-      <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" style="margin-right: 20px" />
+  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
+</p>
 
 我们构建了一个**混合拖拽引擎**，完美融合了两种拖拽体验：
 - **卡片排序**: 由 `GongSolutions.WPF.DragDrop` 驱动，提供丝滑的列表重排动画和半透明幽灵占位符。
