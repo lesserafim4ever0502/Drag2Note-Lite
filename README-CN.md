@@ -6,7 +6,9 @@
 
 Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的速度捕获信息。通过将文本、图片或文件拖入桌面悬浮球，你可以瞬间将稍纵即逝的想法转化为结构化、可搜索的笔记。
 
-![Hero Image](Screenshot/windows.png)
+<p align="center">
+  <img src="Screenshot/windows.png" alt="Hero Image" width="100%">
+</p>
 
 ## 🌟 为什么选择 Drag2Note-Lite？
 
@@ -23,7 +25,10 @@ Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的�
 ### 🖱️ 高级拖拽工作流 (Hybrid Drag Engine)
 > **将任何内容拖到悬浮球即可瞬间捕获。**
 
-![Floating Interaction](Screenshot/Floating-decision.png)
+<p align="center">
+  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" width="150" style="margin-right: 20px"/>
+  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" width="300"/>
+</p>
 
 我们构建了一个**混合拖拽引擎**，完美融合了两种拖拽体验：
 - **卡片排序**: 由 `GongSolutions.WPF.DragDrop` 驱动，提供丝滑的列表重排动画和半透明幽灵占位符。
@@ -31,19 +36,36 @@ Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的�
 - **文件捕获**: 将任何文件拖入悬浮球即可创建笔记。图片自动生成预览，文本文件自动解析内容。
 
 ### 🏷️ 智能与流畅的标签系统
-![Editor & Tagging](Screenshot/card-edit.png)
+<p align="center">
+  <img src="Screenshot/main-notes.png" alt="Notes List" width="45%" style="margin-right: 10px"/>
+  <img src="Screenshot/card-edit.png" alt="Editor & Tagging" width="45%"/>
+</p>
 
 - **自动日期**: 新笔记自动添加 `YYYY-MM-DD` 格式的创建日期标签。
 - **拖拽排序**: 像管理卡片一样自由调整标签顺序。
 - **内联编辑**: 双击任意标签即可重命名。
 
 ### 🎨 自适应 UI / UX
-![Dark Mode](Screenshot/windows-dark.png)
+<p align="center">
+  <img src="Screenshot/windows-dark.png" alt="Dark Mode" width="100%">
+</p>
 
 - **真·深色模式**: 界面（包括悬停状态、按钮样式、文字对比度）会根据系统主题动态切换。
 - **精致交互**: 
   - **胶囊切换**: "笔记/待办" 和 "编辑/预览" 模式切换拥有平滑的过渡动画。
   - **圆角控件**: 自定义的 `ControlTemplate` 确保每一个按钮（如圆角返回键）都有细腻的触感反馈。
+
+<p align="center">
+  <img src="Screenshot/main-todo.png" alt="Todo List" width="48%"/>
+  <img src="Screenshot/card-preview.png" alt="Markdown Preview" width="48%"/>
+</p>
+
+### ⚙️ 强大的设置选型
+<p align="center">
+  <img src="Screenshot/settings-main.png" alt="Settings Main" width="32%"/>
+  <img src="Screenshot/settings-general.png" alt="Settings General" width="32%"/>
+  <img src="Screenshot/settings-floating.png" alt="Settings Floating" width="32%"/>
+</p>
 
 ### 🛠️ 开发者友好的架构
 - **清晰 MVVM**: 基于 `CommunityToolkit.Mvvm` 构建，逻辑与视图分离。

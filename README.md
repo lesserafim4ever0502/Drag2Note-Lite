@@ -6,7 +6,9 @@
 
 Drag2Note-Lite is a minimal yet powerful productivity tool designed to capture information as fast as you can think. By dragging text, images, or files onto a floating drop zone, you can instantly turn transient thoughts into structured, searchable notes.
 
-![Hero Image](Screenshot/windows.png)
+<p align="center">
+  <img src="Screenshot/windows.png" alt="Hero Image" width="100%">
+</p>
 
 ## 🌟 Why Drag2Note-Lite?
 
@@ -23,7 +25,10 @@ In a world of bloated, cloud-dependent note apps, Drag2Note-Lite stands out by f
 ### 🖱️ Advanced Drag & Drop Workflow
 > **Drag any content to the floating ball to capture instantly.**
 
-![Floating Interaction](Screenshot/Floating-decision.png)
+<p align="center">
+  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" width="150" style="margin-right: 20px"/>
+  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" width="300"/>
+</p>
 
 We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
 - **Card Reordering**: Powered by `GongSolutions.WPF.DragDrop` for smooth, animated list sorting with ghost adorners.
@@ -31,19 +36,36 @@ We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
 - **File Capture**: Drag any file onto the floating ball to create a note. Images are auto-previewed; text files are parsed.
 
 ### 🏷️ Smart & Fluid Tagging
-![Editor & Tagging](Screenshot/card-edit.png)
+<p align="center">
+  <img src="Screenshot/main-notes.png" alt="Notes List" width="45%" style="margin-right: 10px"/>
+  <img src="Screenshot/card-edit.png" alt="Editor & Tagging" width="45%"/>
+</p>
 
 - **Auto-Date Tags**: Automatically tags new notes with `YYYY-MM-DD`.
 - **Drag-to-Sort**: Reorder tags just like you reorder notes.
 - **Inline Editing**: Double-click any tag to rename it.
 
 ### 🎨 Adaptive UI / UX
-![Dark Mode](Screenshot/windows-dark.png)
+<p align="center">
+  <img src="Screenshot/windows-dark.png" alt="Dark Mode" width="100%">
+</p>
 
 - **True Dark Mode**: The UI (including hover states, specialized buttons, and text contrast) adapts perfectly to your system theme.
 - **Refined Interactions**: 
   - **Capsule Toggles**: Smooth transitions between "Notes/Todo" and "Edit/Preview".
   - **Rounded Controls**: Custom `ControlTemplates` for buttons ensures every click feels tactile.
+
+<p align="center">
+  <img src="Screenshot/main-todo.png" alt="Todo List" width="48%"/>
+  <img src="Screenshot/card-preview.png" alt="Markdown Preview" width="48%"/>
+</p>
+
+### ⚙️ Powerful Settings
+<p align="center">
+  <img src="Screenshot/settings-main.png" alt="Settings Main" width="32%"/>
+  <img src="Screenshot/settings-general.png" alt="Settings General" width="32%"/>
+  <img src="Screenshot/settings-floating.png" alt="Settings Floating" width="32%"/>
+</p>
 
 ### 🛠️ Developer-First Architecture
 - **Clean MVVM**: Built on `CommunityToolkit.Mvvm` for a separation of concerns.
