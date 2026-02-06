@@ -26,8 +26,8 @@ In a world of bloated, cloud-dependent note apps, Drag2Note-Lite stands out by f
 > **Drag any content to the floating ball to capture instantly.**
 
 <p align="center">
-  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" style="margin-right: 20px" />
-  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
+  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" width="40%" style="margin-right: 20px" />
+  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" width="40%" />
 </p>
 
 We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
@@ -115,7 +115,7 @@ Drag2Note/
 ├── ViewModels/         # Application Logic
 ├── Models/             # Data Structures
 ├── Services/           # File I/O & Business Logic
-└── UserData/           # 你的笔记 (本地存储)
+└── UserData/           # Your Notes (Local Storage)
 ```
 
 ---

@@ -26,8 +26,8 @@ Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的�
 > **将任何内容拖到悬浮球即可瞬间捕获。**
 
 <p align="center">
-  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" style="margin-right: 20px" />
-  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
+  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" width="40%" style="margin-right: 20px" />
+  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" width="40%" />
 </p>
 
 我们构建了一个**混合拖拽引擎**，完美融合了两种拖拽体验：
