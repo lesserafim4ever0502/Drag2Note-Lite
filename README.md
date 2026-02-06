@@ -41,10 +41,10 @@ We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
 - **Tag Management**: Custom native implementation allow you to drag tags *within* draggable cards without conflicts.
 - **File Capture**: Drag any file onto the floating ball to create a note. Images are auto-previewed; text files are parsed.
 
-### 🏷️ Smart & Fluid Tagging
+### 🏷️ Smart & Fluid Tagging (Main View)
 <p align="center">
   <img src="Screenshot/main-notes.png" alt="Notes List" width="45%" style="margin-right: 10px"/>
-  <img src="Screenshot/card-edit.png" alt="Editor & Tagging" width="45%"/>
+  <img src="Screenshot/main-todo.png" alt="Todo List" width="45%"/>
 </p>
 
 - **Auto-Date Tags**: Automatically tags new notes with `YYYY-MM-DD`.
@@ -61,8 +61,9 @@ We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
   - **Capsule Toggles**: Smooth transitions between "Notes/Todo" and "Edit/Preview".
   - **Rounded Controls**: Custom `ControlTemplates` for buttons ensures every click feels tactile.
 
+### 📝 Editor & Preview
 <p align="center">
-  <img src="Screenshot/main-todo.png" alt="Todo List" width="48%"/>
+  <img src="Screenshot/card-edit.png" alt="Editor & Tagging" width="48%"/>
   <img src="Screenshot/card-preview.png" alt="Markdown Preview" width="48%"/>
 </p>
 

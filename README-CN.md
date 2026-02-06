@@ -41,10 +41,10 @@ Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的�
 - **标签管理**: 自定义原生实现，允许你在可拖拽的卡片内部独立拖拽标签，互不冲突。
 - **文件捕获**: 将任何文件拖入悬浮球即可创建笔记。图片自动生成预览，文本文件自动解析内容。
 
-### 🏷️ 智能与流畅的标签系统
+### 🏷️ 智能与流畅的标签系统 (主界面)
 <p align="center">
   <img src="Screenshot/main-notes.png" alt="Notes List" width="45%" style="margin-right: 10px"/>
-  <img src="Screenshot/card-edit.png" alt="Editor & Tagging" width="45%"/>
+  <img src="Screenshot/main-todo.png" alt="Todo List" width="45%"/>
 </p>
 
 - **自动日期**: 新笔记自动添加 `YYYY-MM-DD` 格式的创建日期标签。
@@ -61,8 +61,9 @@ Drag2Note-Lite 是一款极简却强大的生产力工具，旨在以思维的�
   - **胶囊切换**: "笔记/待办" 和 "编辑/预览" 模式切换拥有平滑的过渡动画。
   - **圆角控件**: 自定义的 `ControlTemplate` 确保每一个按钮（如圆角返回键）都有细腻的触感反馈。
 
+### 📝 编辑器与预览
 <p align="center">
-  <img src="Screenshot/main-todo.png" alt="Todo List" width="48%"/>
+  <img src="Screenshot/card-edit.png" alt="Editor & Tagging" width="48%"/>
   <img src="Screenshot/card-preview.png" alt="Markdown Preview" width="48%"/>
 </p>
 
