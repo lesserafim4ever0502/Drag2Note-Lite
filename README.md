@@ -25,10 +25,16 @@ In a world of bloated, cloud-dependent note apps, Drag2Note-Lite stands out by f
 ### 🖱️ Advanced Drag & Drop Workflow
 > **Drag any content to the floating ball to capture instantly.**
 
-<p align="center">
-  <img src="Screenshot/Floating-idle.png" alt="Floating Ball" width="150" style="margin-right: 20px"/>
-  <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" width="300"/>
-</p>
+<table align="center" border="0">
+  <tr>
+    <td align="center" valign="middle">
+      <img src="Screenshot/Floating-idle.png" alt="Floating Ball" height="150" />
+    </td>
+    <td align="center" valign="middle">
+      <img src="Screenshot/Floating-decision.png" alt="Floating Interaction" height="150" />
+    </td>
+  </tr>
+</table>
 
 We've engineered a **Hybrid Drag Engine** that combines the best of both worlds:
 - **Card Reordering**: Powered by `GongSolutions.WPF.DragDrop` for smooth, animated list sorting with ghost adorners.
