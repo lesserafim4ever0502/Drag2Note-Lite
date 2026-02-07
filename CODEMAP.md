@@ -43,7 +43,7 @@ Drag2Note/
 | :--- | :--- | :--- |
 | `App.xaml.cs` | **程序入口点**。负责单例检查 (Mutex)、全局异常捕获以及应用启动流程。 | `OnStartup`, `SingleInstance`, `GlobalExceptionHandler` |
 | `MainWindow.xaml.cs` | **主窗口交互**。处理窗口移动、关闭、以及基于状态的 UI 动效（如胶囊切换）。 | `WindowDrag`, `StateAnimations` |
-| `MainViewModel.cs` | **大脑**。管理所有笔记数据 (`FilteredItems`)、搜索逻辑、拖拽排序接口 (`Drop`) 以及 UI 状态。 | `FilteredItems`, `Search`, `GongDragDrop Implementation` |
+| `MainViewModel.cs` | **大脑**。管理所有笔记数据 (`FilteredItems`)、搜索逻辑、拖拽排序 (Native DragDrop) 以及 UI 状态。 | `FilteredItems`, `Search`, `Native DragDrop Support` |
 
 ### 视图层 (View Layer)
 
@@ -64,14 +64,14 @@ Drag2Note/
 
 ## ⚙️ Key Mechanisms / 关键机制
 
-### 混合拖拽系统 (Hybrid Drag & Drop)
-Drag2Note-Lite 采用独特的混合拖拽架构来解决 UI 嵌套冲突：
-1.  **卡片排序 (Outer Layer)**: 使用 `GongSolutions.WPF.DragDrop` 库。
-    *   **触发**: 在 `NoteCard` 的空白区域拖动。
-    *   **逻辑**: `MainViewModel` 实现 `IDropTarget` 接口，处理 `ObservableCollection` 的重新排序。
-2.  **标签排序 (Inner Layer)**: 使用 WPF 原生 `DragDrop`。
-    *   **触发**: 在 `TagItem` (Border) 上按下鼠标 (`PreviewMouseLeftButtonDown`)。
-    *   **冲突解决**: `CardListDragSource` 检测到拖动源为 Tag 时，会主动拦截 Gong 的拖拽事件，将控制权移交给原生逻辑。
+### 双层拖拽系统 (Dual-Layer Drag & Drop)
+Drag2Note-Lite 采用纯原生 WPF 拖拽架构来实现复杂的交互：
+1.  **卡片排序 (Outer Layer)**: 使用 WPF 原生 `DragDrop` 事件。
+    *   **触发**: 监听 `ListBoxItem` 的 `PreviewMouseLeftButtonDown` 和 `PreviewMouseMove`。
+    *   **逻辑**: 手动构建 `DataObject`，在 `Drop` 事件中计算插入位置并更新 `ObservableCollection`。
+2.  **标签排序 (Inner Layer)**: 同样使用 WPF 原生 `DragDrop`。
+    *   **触发**: 在 `TagItem` 上处理鼠标事件。
+    *   **冲突解决**: 通过具体的事件源判断 (`e.OriginalSource`) 和明确的数据类型检查 (`GetDataPresent`) 来区分是拖拽卡片还是标签，互不干扰。
 
 ### 数据存储架构 (Data Architecture)
 *   **Metadata**: `UserData/metadata.json` 存储索引、标签和状态。
